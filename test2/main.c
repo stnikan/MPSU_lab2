@@ -14,7 +14,10 @@
 
 uint16_t sec = 0;
 uint8_t my_str[]    = { 0x0F, 0x09,0x09,0x0F, 0xF0, 0x90, 0x90, 0xF0};
-	uint8_t my_column[] = {0x00, 0x10,0x20,0x30,0x40,0x50,0x60,0x70,0x80};
+uint8_t my_column[] ={
+	0x00,0x10,0x20,0x30,0x40,0x50,0x60,0x70,
+	0x80,0x90,0xA0,0xB0,0xC0,0xD0,0xE0,0xF0};
+	
 uint8_t i = 0;
 
 //———————————————
@@ -35,15 +38,16 @@ void timer_ini(void)
 
 //———————————————
 
-ISR (TIMER1_OVF_vect)
+ISR (TIMER1_OVF_vect) //смена рисуемого столбцаи и вывод картинки
 {
 	TCNT1 = 65450; 
-	i = (i+1)%8;
+	i = (i+1)%16;
 	PORTD = my_column[i];
-	PORTA = my_str[i];
+	PORTA = my_str[i%8];
+	PORTC = my_str[(i+4)%8];;
 }
 //———————————————
-ISR (TIMER3_OVF_vect) 
+ISR (TIMER3_OVF_vect) //смена картинки
 {
 	TCNT3 = 22058;// 65300;
 	//i = (i+1)%8;
@@ -69,7 +73,9 @@ int main(void)
 {	
 	
     DDRA = 0xFF; 
-    DDRD = 0xF0;
+    DDRD = 0xFF;
+	DDRC = 0xFF;
+	
 
 	timer_ini();
 	sei();
@@ -79,8 +85,6 @@ int main(void)
 	
     while (1) 
     {	
-		
-		
 			
 		
     }
